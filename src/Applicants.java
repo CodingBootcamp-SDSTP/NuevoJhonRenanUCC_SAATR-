@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class Applicants
 {
 	public static class Builder {
@@ -11,6 +13,8 @@ public class Applicants
 		String userName;
 		String status;
 		String sex;
+		LocalDate appSched;
+		int id;
 
 		public Builder setFname(String fn) {
 			fName=fn;
@@ -18,12 +22,17 @@ public class Applicants
 		}
 
 		public Builder setMname(String mn) {
-			fMame=mn;
+			mName=mn;
+			return(this);
+		}
+
+		public Builder setId(int id) {
+			this.id=id;
 			return(this);
 		}
 
 		public Builder setLname(String ln) {
-			fLame=ln;
+			lName=ln;
 			return(this);
 		}
 
@@ -57,6 +66,11 @@ public class Applicants
 			return(this);
 		}
 
+		public Builder setAppSched(LocalDate sched) {
+			appSched=sched;
+			return(this);
+		}
+
 		public Builder setStatus(String stat) {
 			status=stat;
 			return(this);
@@ -68,6 +82,14 @@ public class Applicants
 
 		public String getFname() {
 			return fName;
+		}
+
+		public LocalDate getAppSched() {
+			return appSched;
+		}
+
+		public int getId() {
+			return id;
 		}
 
 		public String getMname() {
@@ -117,18 +139,22 @@ public class Applicants
 	final String USERNAME;
 	final String STATUS;
 	final String SEX;
+	final LocalDate APPSCHED;
+	final int ID;
 
-	public Applicants(Builder b) {
+	private Applicants(Builder b) {
+		ID=b.getId();
 		FNAME=b.getFname();
 		MNAME=b.getMname();
 		LNAME=b.getLname();
-		ADDRESS=b.getAdress();
+		ADDRESS=b.getAddress();
 		AGE=b.getAge();
 		MOBILENUMBER=b.getMobile();
 		EMAILADD=b.getEmail();
 		USERNAME=b.getUsername();
 		STATUS=b.getStatus();
 		SEX=b.getSex();
+		APPSCHED=b.getAppSched();
 	}
 
 	public String toString() {

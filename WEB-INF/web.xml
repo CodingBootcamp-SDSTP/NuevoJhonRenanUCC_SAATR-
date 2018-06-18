@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<web-app>
+	<display-name>UCC-SAATR Servlet</display-name>
+	<description>School Application and Admission Test Results</description>
+	<servlet>
+		<servlet-name>HomePage</servlet-name>
+		<servlet-class>HomeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HomePage</servlet-name>
+		<url-pattern>/home</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Applicants</servlet-name>
+		<servlet-class>ApplicantsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Applicants</servlet-name>
+		<url-pattern>/applicants</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AppDates</servlet-name>
+		<servlet-class>AppointmentDatesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AppDates</servlet-name>
+		<url-pattern>/dates</url-pattern>
+	</servlet-mapping>
+</web-app>
