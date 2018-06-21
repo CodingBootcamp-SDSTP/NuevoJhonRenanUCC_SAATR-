@@ -19,41 +19,30 @@ public class ApplicantsServlet extends HttpServlet
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		PrintWriter out=res.getWriter();
-		res.setContentType("text/xml");
-		StringBuilder sb=new StringBuilder("<applicants>");
-		out.println(generateXML(applicants,sb));
+		res.setContentType("application/json");
+		StringBuilder sb=new StringBuilder("[");
+		out.println(generateJSON(sb));
 		// out.println("<h1>helloworld</h1>");
 	}
 
-	public String generateXML(ArrayList<Applicants> appsColl,StringBuilder sb) {
-		for(Applicants appKey:appsColl) {
-			sb.append("<applicant><applicantid>");
-			sb.append(appKey.ID);
-			sb.append("</applicantid><firstname>");
-			sb.append(appKey.FNAME);
-			sb.append("</firstname><middlename>");
-			sb.append(appKey.MNAME);
-			sb.append("</middlename><lastname>");
-			sb.append(appKey.LNAME);
-			sb.append("</lastname><address>");
-			sb.append(appKey.ADDRESS);
-			sb.append("</address><age>");
-			sb.append(appKey.AGE);
-			sb.append("</age><sex>");
-			sb.append(appKey.SEX);
-			sb.append("</sex><mobilenumber>");
-			sb.append(appKey.MOBILENUMBER);
-			sb.append("</mobilenumber><emailadd>");
-			sb.append(appKey.EMAILADD);
-			sb.append("</emailadd><username>");
-			sb.append(appKey.USERNAME);
-			sb.append("</username><app-sched>");
-			sb.append(appKey.APPSCHED);
-			sb.append("</app-sched><status>");
-			sb.append(appKey.STATUS);
-			sb.append("</status></applicant>");
+	public String generateJSON(StringBuilder sb) {
+		for(int i=0; i<applicants.size(); i++) {
+			sb.append("{\"id\":\""+applicants.get(i).ID+"\",");
+			sb.append("\"firstname\":\""+applicants.get(i).FNAME+"\",");
+			sb.append("\"middlename\":\""+applicants.get(i).MNAME+"\",");
+			sb.append("\"lastname\":\""+applicants.get(i).LNAME+"\",");
+			sb.append("\"address\":\""+applicants.get(i).ADDRESS+"\",");
+			sb.append("\"age\":\""+applicants.get(i).AGE+"\",");
+			sb.append("\"natalday\":\""+applicants.get(i).NATAL+"\",");
+			sb.append("\"sex\":\""+applicants.get(i).SEX+"\",");
+			sb.append("\"mobilenumber\":\""+applicants.get(i).MOBILENUMBER+"\",");
+			sb.append("\"emailadd\":\""+applicants.get(i).EMAILADD+"\",");
+			sb.append("\"username\":\""+applicants.get(i).USERNAME+"\",");
+			sb.append("\"status\":\""+applicants.get(i).STATUS+"\",");
+			sb.append("\"appdateid\":\""+applicants.get(i).APPDATEID+"\"");
+			sb.append(i==applicants.size()-1?"}":"},");
 		}
-		sb.append("</applicants>");
+		sb.append("]");
 		return sb.toString();
 	}
 

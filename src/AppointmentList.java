@@ -16,11 +16,4 @@ public class AppointmentList
 	public ArrayList<Appointment> getAppointments() {
 		return appointments;
 	}
-	// public AppointmentList(int id,String appId,LocalDate d,String name) {
-	// 	appDates=new ArrayList<LocalDate>();
-	// 	APPOINTMENTID=id;
-	// 	appointmentName=name;
-	// 	applicantId=appId;
-	// 	date=d;
-	// }
 }

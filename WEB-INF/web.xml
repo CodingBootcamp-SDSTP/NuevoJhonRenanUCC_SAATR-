@@ -26,4 +26,20 @@
 		<servlet-name>AppDates</servlet-name>
 		<url-pattern>/dates</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>Appointments</servlet-name>
+		<servlet-class>AppointmentsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Appointments</servlet-name>
+		<url-pattern>/appointments</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Signup</servlet-name>
+		<servlet-class>SignupServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Signup</servlet-name>
+		<url-pattern>/signup</url-pattern>
+	</servlet-mapping>
 </web-app>

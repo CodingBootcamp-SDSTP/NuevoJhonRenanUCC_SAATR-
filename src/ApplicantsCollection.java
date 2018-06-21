@@ -24,7 +24,7 @@ public class ApplicantsCollection
 		return(applicants.get(i));
 	}
 
-	public int geApplicationCount() {
+	public int getApplicationCount() {
 		return(applicants.size());
 	}
 }

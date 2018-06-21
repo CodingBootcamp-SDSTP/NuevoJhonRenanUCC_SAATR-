@@ -10,28 +10,29 @@ import java.time.format.DateTimeFormatter;
 public class AppointmentDatesServlet extends HttpServlet
 {
 	AppDatabase ad;
-	ArrayList<Appointment> dates;
+	ArrayList<AppointmentDate> dates;
 
 	public void init() throws ServletException {
 		ad=AppDatabase.instance();
-		dates=ad.getAppointments();
+		dates=ad.getAppDates();
 	}
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		PrintWriter out=res.getWriter();
-		res.setContentType("text/xml");
-		StringBuilder sb=new StringBuilder("<dates>");
-		out.println(generateXML(sb));
+		res.setContentType("application/json");
+		StringBuilder sb=new StringBuilder("[");
+		out.println(generateJSON(sb));
 		// out.println("<h1>haelloworld</h1>");
 	}
 
-	public String generateXML(StringBuilder sb) {
+	public String generateJSON(StringBuilder sb) {
 		for(int i=0; i<dates.size(); i++) {
-			sb.append("<id>"+dates.get(i).getId()+"</id>");
-			sb.append("<id>"+dates.get(i).getDate()+"</id>");
-			
+			sb.append("{");
+			sb.append("\"id\":\""+dates.get(i).ID+"\",");
+			sb.append("\"date\":\""+dates.get(i).DATE+"\"");
+			sb.append(i==dates.size()-1?"}":"},");
 		}
-		sb.append("</dates>");
+		sb.append("]");
 		return sb.toString();
 	}
 

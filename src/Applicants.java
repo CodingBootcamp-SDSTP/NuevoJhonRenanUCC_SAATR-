@@ -13,65 +13,71 @@ public class Applicants
 		String userName;
 		String status;
 		String sex;
-		LocalDate appSched;
+		String appDateId;
 		int id;
+		LocalDate natal;
 
-		public Builder setFname(String fn) {
+		public Builder natal(LocalDate natal) {
+			this.natal=natal;
+			return(this);
+		}
+
+		public Builder fname(String fn) {
 			fName=fn;
 			return(this);
 		}
 
-		public Builder setMname(String mn) {
+		public Builder mname(String mn) {
 			mName=mn;
 			return(this);
 		}
 
-		public Builder setId(int id) {
+		public Builder id(int id) {
 			this.id=id;
 			return(this);
 		}
 
-		public Builder setLname(String ln) {
+		public Builder lname(String ln) {
 			lName=ln;
 			return(this);
 		}
 
-		public Builder setAddress(String add) {
+		public Builder address(String add) {
 			address=add;
 			return(this);
 		}
 
-		public Builder setAge(int age) {
+		public Builder age(int age) {
 			this.age=age;
 			return(this);
 		}
 
-		public Builder setSex(String sex) {
+		public Builder sex(String sex) {
 			this.sex=sex;
 			return(this);
 		}
 
-		public Builder setMobile(String mobile) {
+		public Builder mobile(String mobile) {
 			mobileNumber=mobile;
 			return(this);
 		}
 
-		public Builder setEmail(String email) {
+		public Builder email(String email) {
 			emailAdd=email;
 			return(this);
 		}
 
-		public Builder setUsername(String user) {
+		public Builder username(String user) {
 			userName=user;
 			return(this);
 		}
 
-		public Builder setAppSched(LocalDate sched) {
-			appSched=sched;
+		public Builder appDateId(String dateid) {
+			appDateId=dateid;
 			return(this);
 		}
 
-		public Builder setStatus(String stat) {
+		public Builder status(String stat) {
 			status=stat;
 			return(this);
 		}
@@ -80,12 +86,16 @@ public class Applicants
 			return new Applicants(this);
 		}
 
+		public LocalDate getNatal() {
+			return natal;
+		}
+
 		public String getFname() {
 			return fName;
 		}
 
-		public LocalDate getAppSched() {
-			return appSched;
+		public String getAppDateId() {
+			return appDateId;
 		}
 
 		public int getId() {
@@ -139,10 +149,11 @@ public class Applicants
 	final String USERNAME;
 	final String STATUS;
 	final String SEX;
-	final LocalDate APPSCHED;
 	final int ID;
+	final String APPDATEID;
+	final LocalDate NATAL;
 
-	private Applicants(Builder b) {
+	public Applicants(Builder b) {
 		ID=b.getId();
 		FNAME=b.getFname();
 		MNAME=b.getMname();
@@ -154,10 +165,7 @@ public class Applicants
 		USERNAME=b.getUsername();
 		STATUS=b.getStatus();
 		SEX=b.getSex();
-		APPSCHED=b.getAppSched();
-	}
-
-	public String toString() {
-		return(FNAME+" "+MNAME+" "+LNAME+" "+ADDRESS+" "+AGE+" "+MOBILENUMBER+" "+EMAILADD+" "+USERNAME+" "+STATUS+" "+SEX);
+		APPDATEID=b.getAppDateId();
+		NATAL=b.getNatal();
 	}
 }
