@@ -8,6 +8,8 @@ public class AppDatabase
 	private ApplicantsCollection applicants;
 	AppointmentList app;
 	DatesList appDates;
+	UserCollection users;
+	
 
 	public static AppDatabase instance() {
 		if(_instance==null) {
@@ -22,6 +24,7 @@ public class AppDatabase
 		applicants=new ApplicantsCollection();
 		app=new AppointmentList();
 		appDates=new DatesList();
+		users=new UserCollection();
 		try {
 			Class.forName("org.sqlite.JDBC");
 			conn=DriverManager.getConnection("jdbc:sqlite:projectappdb");
@@ -42,13 +45,10 @@ public class AppDatabase
 			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS app_schedule_dates_tbl(id INTEGER PRIMARY KEY,"+
 			"date Date,counter INTEGER,identifier VARCHAR(15));");
 			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS appointments_tbl(id INTEGER PRIMARY KEY,"+
-			"dateid INTEGER, applicantid VARCHAR(10))");
-			LocalDate date1=LocalDate.of(2018,6,20);
-			LocalDate date2=LocalDate.of(2018,6,21);
-			LocalDate date3=LocalDate.of(2018,6,22);
-			addAppSchedDate(date1);
-			addAppSchedDate(date2);
-			addAppSchedDate(date3);
+			"dateid INTEGER, applicantid VARCHAR(10));");
+			//TEST
+			stmt.executeUpdate("CREATE TABLE IF NOT EXISTS users_tbl(id INTEGER PRIMARY KEY,"+
+			"username VARCHAR(20) NOT NULL,email VARCHAR(30) NOT NULL,password VARCHAR(30) NOT NULL,usertype VARCHAR(15));");
 			getDataFromDB(conn);
 		}
 		catch(Exception e) {
@@ -66,6 +66,10 @@ public class AppDatabase
 
 	public ApplicantsCollection getApplicants() {
 		return applicants;
+	}
+
+	public UserCollection getUsers() {
+		return users;
 	}
 	
 	public boolean addApplicant(Applicants appl) {
@@ -99,7 +103,32 @@ public class AppDatabase
 				}
 				Appointment newAppointment=new Appointment.Builder().appointmentId(Integer.parseInt(id)).id(dateId).applicantId(id).build();
 				addAppointment(newAppointment);
-				app.addAppointment(newAppointment);
+				UserAccount newUser=new UserAccount.Builder().id(Integer.parseInt(id)).userType("student").username(appl.USERNAME).email(appl.EMAILADD).password("123456").build();
+				addUser(newUser);
+				users.addUser(newUser);
+				rs=stmt.executeQuery("SELECT apps.fname||' '||substr(apps.mname,1,1)"+
+				"||'. '||apps.lname as name,"+
+				"apps.address as address,apnts.id as thisid,apps.id"+
+				" as applicantid,dates.date as appDate,apps.status as status,"+
+				"apps.emailadd as email,apps.sex as sex,apps.mobilenumber as phone"+
+				" FROM ((appointments_tbl as apnts inner join"+
+				" app_schedule_dates_tbl as dates on apnts.dateid=dates.id)"+
+				" inner join applicants_tbl as apps on apnts.applicantid=apps.id);");
+				while(rs.next()) {
+					String[] apnts={
+						String.valueOf(rs.getInt("thisid")),
+						rs.getString("applicantid"),
+						rs.getString("appDate"),
+						rs.getString("name"),
+						rs.getString("address"),
+						rs.getString("status"),
+						rs.getString("email"),
+						rs.getString("sex"),
+						rs.getString("phone"),
+						"appointment"
+					};
+					createObject(apnts);
+				}
 			}
 			added=true;
 		}
@@ -119,6 +148,23 @@ public class AppDatabase
 		try {
 			PreparedStatement ps=conn.prepareStatement("INSERT INTO app_schedule_dates_tbl(date) VALUES(?);");
 			ps.setString(1,date.toString());
+			ps.executeUpdate();
+			added=true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return added;
+	}
+
+	public boolean addUser(UserAccount user) {
+		boolean added=false;
+		try {
+			PreparedStatement ps=conn.prepareStatement("INSERT INTO users_tbl(username,email,password,usertype) values(?,?,?,?);");
+			ps.setString(1,user.USERNAME);
+			ps.setString(2,user.EMAIL);
+			ps.setString(3,user.PASSWORD);
+			ps.setString(4,user.USERTYPE);
 			ps.executeUpdate();
 			added=true;
 		}
@@ -173,6 +219,9 @@ public class AppDatabase
 		else if("appointment".equals(user)) {
 			app.addAppointment(new Appointment.Builder().appointmentId(Integer.parseInt(data[0])).applicantId(data[1]).date(LocalDate.parse(data[2])).applicantName(data[3]).applicantAddress(data[4]).appointmentStatus(data[5]).applicantEmail(data[6]).applicantSex(data[7]).applicantPhone(data[8]).build());
 		}
+		else if("user".equals(user)) {
+			users.addUser(new UserAccount.Builder().id(Integer.parseInt(data[0])).userType(data[1]).username(data[2]).email(data[3]).password(data[4]).build());
+		}
 	}
 
 	public boolean getDataFromDB(Connection conn) {
@@ -203,6 +252,42 @@ public class AppDatabase
 				};
 				createObject(result);
 			}
+			rs=stmt.executeQuery("SELECT * FROM users_tbl;");
+			while(rs.next()) {
+				String id=String.valueOf(rs.getInt("id"));
+				String[] users={
+					id,
+					rs.getString("usertype"),
+					rs.getString("username"),
+					rs.getString("email"),
+					rs.getString("password"),
+					"user"
+				};
+				createObject(users);
+			}
+			rs=stmt.executeQuery("SELECT apps.fname||' '||substr(apps.mname,1,1)"+
+				"||'. '||apps.lname as name,"+
+				"apps.address as address,apnts.id as thisid,apps.id"+
+				" as applicantid,dates.date as appDate,apps.status as status,"+
+				"apps.emailadd as email,apps.sex as sex,apps.mobilenumber as phone"+
+				" FROM ((appointments_tbl as apnts inner join"+
+				" app_schedule_dates_tbl as dates on apnts.dateid=dates.id)"+
+				" inner join applicants_tbl as apps on apnts.applicantid=apps.id);");
+				while(rs.next()) {
+					String[] apnts={
+						String.valueOf(rs.getInt("thisid")),
+						rs.getString("applicantid"),
+						rs.getString("appDate"),
+						rs.getString("name"),
+						rs.getString("address"),
+						rs.getString("status"),
+						rs.getString("email"),
+						rs.getString("sex"),
+						rs.getString("phone"),
+						"appointment"
+					};
+					createObject(apnts);
+				}
 			rs=stmt.executeQuery("SELECT * FROM app_schedule_dates_tbl;");
 			LocalDate date;
 			int counter=0;
@@ -217,29 +302,6 @@ public class AppDatabase
 					};
 					createObject(dates);
 				}
-			}
-			rs=stmt.executeQuery("SELECT apps.fname||' '||substr(apps.mname,1,1)"+
-			"||'. '||apps.lname as name,"+
-			"apps.address as address,apnts.id as thisid,apps.id"+
-			" as applicantid,dates.date as appDate,apps.status as status,"+
-			"apps.emailadd as email,apps.sex as sex,apps.mobilenumber as phone"+
-			" FROM ((appointments_tbl as apnts inner join"+
-			" app_schedule_dates_tbl as dates on apnts.dateid=dates.id)"+
-			" inner join applicants_tbl as apps on apnts.applicantid=apps.id);");
-			while(rs.next()) {
-				String[] apnts={
-					String.valueOf(rs.getInt("thisid")),
-					rs.getString("applicantid"),
-					rs.getString("appDate"),
-					rs.getString("name"),
-					rs.getString("address"),
-					rs.getString("status"),
-					rs.getString("email"),
-					rs.getString("sex"),
-					rs.getString("phone"),
-					"appointment"
-				};
-				createObject(apnts);
 			}
 			f=true;
 		}

@@ -22,7 +22,6 @@ public class ApplicantsServlet extends HttpServlet
 		res.setContentType("application/json");
 		StringBuilder sb=new StringBuilder("[");
 		out.println(generateJSON(sb));
-		// out.println("<h1>helloworld</h1>");
 	}
 
 	public String generateJSON(StringBuilder sb) {

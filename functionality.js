@@ -1,18 +1,8 @@
-window.onload=function() {
-	var login=document.getElementById('loginbtn');
+window.onload=()=> {
+	let login=document.getElementById('loginbtn');
 	var signup=document.getElementById('signupbtn');
-	login.onclick=function() {
-		let xhr=new XMLHttpRequest();
-		xhr.open("GET","dates",true);
-		xhr.send();
-		xhr.onreadystatechange=function() {
-			if(xhr.readyState==4) {
-				let data=JSON.parse(xhr.responseText);
-				for(key in data) {
-					console.log(data[key].date);
-				}
-			}
-		}
+	login.onclick=()=> {
+		alert("hi");
 	}
 
 	var inputs={
@@ -22,51 +12,66 @@ window.onload=function() {
 		"address":"Enter Address"
 	}
 	var inputs2={
-		"age":"Enter age",
 		"bday":"Birthday",
 		"gender":"Enter gender",
-		"email":"Enter email-add"
+		"email":"Enter email-add",
+		"user":"username"
+
 	}
 	var inputs3={
 		"phone":"Enter mobile number",
-		"user":"username"
+		"age":"Enter age"
 	}
 
-	signup.onclick=function popup1(text) {
-		let popup=document.createElement('div');
-		popup.className='fullscreenpopup';
-		let container=document.createElement('div');
-		container.className='fullscreenpopup_container';
-		popup.appendChild(container);
-		let content=document.createElement('div');
-		content.className='fullscreenpopup_content';
-		container.appendChild(content);
-		let p1=document.createElement('p');
-		p1.appendChild(document.createTextNode("Applicant's Form"));
-		content.appendChild(p1);
-		let cont1=document.createElement('div');
-		content.appendChild(cont1);
-		for (key in inputs) { createElement("input","input","text",inputs[key],cont1,key); }
-		let cont2=document.createElement('div');
-		content.appendChild(cont2);
-		for (key in inputs2) { createElement("input","input","text",inputs2[key],cont2,key); }
-		let cont3=document.createElement('div');
-		content.appendChild(cont3);
-		for (key in inputs3) { createElement("input","input","text",inputs3[key],cont3,key); }
-		var dateCont=createElement("select",null,null,null,content,"dateCont");
-		// createElement("option",null,null,null,dateCont,null);
-		// // createElement("option",null,null,null,dateCont,null);
-		var p2=document.createElement('p');
-		content.appendChild(p2);
-		var p3=document.createElement('p');
-		content.appendChild(p3);
-		var button=document.createElement('a');
-		button.href='#';
-		button.className='button';
-		var close=document.createElement('a');
+	signup.onclick=()=> {
+		let body=document.body;
+		createElement("div",'fullscreenpopup','','',body,'signupFormModal','','');
+		let signupFormModal=document.getElementById('signupFormModal');
+		createElement('div','fullscreenpopup_container','','',signupFormModal,'container','','');
+		let container=document.getElementById('container');
+		createElement('div','fullscreenpopup_content','','',container,'contentt','','');
+		let content=document.getElementById('contentt');
+		createElement('p','','','',content,'header','Applicants Form','');
+		createElement('div','','','',content,'cont1','','');
+		let cont1=document.getElementById('cont1');
+		for (key in inputs) { createElement("input","input","text",inputs[key],cont1,key,'',''); }
+		createElement('div','','','',content,'cont2','');
+		let cont2=document.getElementById('cont2');
+		for (key in inputs2) {
+			let type='';
+			switch(key) {
+				case 'bday':
+					type='date';
+					break;
+				case 'email':
+					type='email';
+					break;
+				default:
+					type='text';
+					break;
+			}
+			createElement("input","input",type,inputs2[key],cont2,key,'',''); 
+		}
+		createElement('div','','','',content,'cont3','');
+		let cont3=document.getElementById('cont3');
+		for (key in inputs3) { createElement("input","input","number",inputs3[key],cont3,key,'',''); }
+		createElement("select",'','',"'Select Date",cont3,"dateCont",'Select date',null);
+		let date=document.getElementById('dateCont');
+		createElement("option",'','','',date,'','Select date',null);
+		doGetRequest('/project/dates',function(e) {
+			for(let i in e) {
+				createElement("option",'','','',date,'',e[i].month+" "+e[i].day+", "+e[i].year+" - "+e[i].day2,e[i].id);
+			}
+		});
+		createElement('div','','','',content,'btns','','');
+		var btns=document.getElementById('btns');
+		createElement('a','button','','',btns,'submit','','');
+		let submit=document.getElementById('submit');
+		submit.href='#';
+		createElement('a','close','','',btns,'close','','');
+		let close=document.getElementById('close');
 		close.href='#';
-		close.className='close';
-		button.onclick=function() {
+		submit.onclick=()=> {
 			let fName=document.getElementById('fName').value;
 			let mName=document.getElementById('mName').value;
 			let lName=document.getElementById('lName').value;
@@ -76,41 +81,64 @@ window.onload=function() {
 			let email=document.getElementById('email').value;
 			let phone=document.getElementById('phone').value;
 			let user=document.getElementById('user').value;
-			let data="fName="+fName+"&mName="+mName+"&lName="+lName+"&address="+address;
-			doPostRequest(data,"/project/signup");
+			let date=document.getElementById('dateCont').value;
+			let gender=document.getElementById('gender').value;
+			let data="fName="+fName+"&mName="+mName+"&lName="+
+			lName+"&address="+address+"&age="+age+"&bday="+bday+
+			"&email="+email+"&phone="+phone+"&user="+user+"&date="+date+"&gender="+gender;
+			console.log(data);
+			if(fName!='' && mName!='' && lName!='' && address!='' && age!='' && bday!='' && email!='' && phone!='' && gender!='' && user!='' && data!='' && date!=null) {
+				doPostRequest(data,"/project/signup",signupFormModal);
+			}
+			else {
+				alert("Please fill up the form!");
+			}
 		}
-		close.onclick=function() {
-			document.body.removeChild(popup);
+		close.onclick=()=> {
+			destroyElement(signupFormModal);
 		}
-		p2.appendChild(button);
-		p3.appendChild(close);
-		var span=document.createElement('span');
-		span.appendChild(document.createTextNode('OK'));
-		button.appendChild(span);
+		createElement('span','','','',submit,'span','OK','');
 		close.innerHTML="close";
-		document.body.appendChild(popup);
 	}
 }
 
-function createElement(type,className,att1,att2,parent,id) {
+createElement=(type,className,att1,att2,parent,id,text,value)=> {
 	let elem=document.createElement(type);
 	elem.className=className;
 	elem.setAttribute('type', att1);
 	elem.setAttribute('id',id);
 	elem.setAttribute('placeholder', att2);
+	elem.setAttribute('value',value);
+	elem.setAttribute('required','true')
+	elem.appendChild(document.createTextNode(text));
 	parent.appendChild(elem);
 }
 
+destroyElement=(elem)=> {
+	document.body.removeChild(elem);
+}
 
-function doPostRequest(data,url) {
+doPostRequest=(data,url,elem)=> {
 	let xhr=new XMLHttpRequest();
 	xhr.onreadystatechange=function() {
 		if(xhr.readyState==4) {
-			alert("You have succesfully signed up.");
+			alert("Added");
 			console.log(data);
+			destroyElement(elem);
 		}
 	}
 	xhr.open("POST",url,true);
 	xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xhr.send(data);
+}
+
+doGetRequest=(url,callback)=> {
+	let xhr=new XMLHttpRequest();
+	xhr.onreadystatechange=()=> {
+		if(xhr.readyState==4) {
+			callback(JSON.parse(xhr.responseText));
+		}
+	}
+	xhr.open('GET',url,true);
+	xhr.send();
 }

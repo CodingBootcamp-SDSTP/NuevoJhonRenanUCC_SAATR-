@@ -175,11 +175,11 @@ a.close:hover {
 }
 
 .input {
-	padding: 10px;
+	padding: 20px;
 	border: 2px solid green;
 }
 
 .input:hover {
 	box-shadow: 0px 10px 20px #913d3d outset, 1px 1px 3px #7c6f6f;
-	font-size:20px;
+	/* font-size:20px; */
 }

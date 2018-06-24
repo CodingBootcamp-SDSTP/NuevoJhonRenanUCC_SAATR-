@@ -4,7 +4,6 @@ public class Appointment
 {
 	public static class Builder
 	{
-
 		int appointmentId;
 		int id;
 		LocalDate date;
